@@ -34,16 +34,62 @@ public class HelloController {
 
     @FXML
     protected void onOdeslatButtonClick() {
-        if (!nazevUkolu.getText().equals("")) {
+        boolean nazev = true;
+        boolean predmet = true;
+        boolean priorita = true;
+        if (nazevUkolu.getText().equals("")) {
             System.out.println("Ukol nema nazev");
-            info.setText("Ukol nema nazev");
-        }else if(!ANJ.isSelected() && !MAT.isSelected() && !CES.isSelected()) {
+            info.setText(info.getText()+"Ukol nema nazev\n");
+            nazev = false;
+        }
+        if(!ANJ.isSelected() && !MAT.isSelected() && !CES.isSelected()) {
             System.out.println("Ukol nema predmet");
-            info.setText("Ukol nema predmet");
-        }else if(!specha.isSelected() && !mamCas.isSelected() && !bezTerminu.isSelected()){
+            info.setText(info.getText()+"Ukol nema predmet\n");
+            predmet = false;
+        }
+        if(!specha.isSelected() && !mamCas.isSelected() && !bezTerminu.isSelected()){
             System.out.println("Ukol nema prioritu");
-            info.setText("Ukol nema prioritu");
-        }else{
+            info.setText(info.getText()+"Ukol nema prioritu\n");
+            priorita = false;
+        }
+        if (nazev && predmet && priorita) {
+            String splnenoS = "";
+            String predmet = "";
+            String prioritaS = "";
+
+            if (ANJ.isSelected()) {
+                predmet = ANJ.getText();
+            }else if (MAT.isSelected()) {
+                predmet = MAT.getText();
+            }else if (CES.isSelected()) {
+                predmet = CES.getText();
+            }
+
+            if (specha.isSelected()) {
+                prioritaS = specha.getText();
+            }else if (mamCas.isSelected()) {
+                prioritaS = mamCas.getText();
+            }else if (bezTerminu.isSelected()) {
+                prioritaS = bezTerminu.getText();
+            }
+
+            if (checkUkolu.isSelected()) {
+                splneno = "Ano";
+            }else{
+                splneno = "Ne";
+            }
+
+            lstUkoluItems.add(new Ukol(nazevUkolu.getText(),predmet, prioritaS,splneno));
+            listUkolu.add(new Ukol(nazevUkolu.getText(),predmet, prioritaS,splneno));
+            lstUkolu.setItems(lstUkoluItems);
+            nazevUkolu.setText("");
+            ANJ.setSelected(false);
+            MAT.setSelected(false);
+            CES.setSelected(false);
+            specha.setSelected(false);
+            mamCas.setSelected(false);
+            bezTerminu.setSelected(false);
+            checkUkolu.setSelected(false);}
             String splneno = "";
             String predmet = "";
             String priorita = "";
