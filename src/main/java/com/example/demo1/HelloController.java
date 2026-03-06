@@ -1,15 +1,19 @@
 package com.example.demo1;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HelloController {
     @FXML
     private Label info;
     @FXML
-    private Button odeslani;
+    private Button odeslani, uprava, smazani, detail, dokoncit;
     @FXML
     private TextField nazevUkolu;
     @FXML
@@ -20,42 +24,123 @@ public class HelloController {
     private RadioButton ANJ, MAT, CES, specha, mamCas, bezTerminu;
     @FXML
     private CheckBox checkUkolu;
-
-
+    @FXML
+    private MenuItem ukoncit, vse, dokoncene, nedokoncene;
     @FXML
     protected void initialize() {
         lstUkolu.setItems(lstUkoluItems);
     }
+    private List<Ukol> listUkolu = new ArrayList<>();
 
     @FXML
     protected void onOdeslatButtonClick() {
-        String splneno = "";
-        String predmet = "";
-        String priorita = "";
+        if (!nazevUkolu.getText().equals("")) {
+            System.out.println("Ukol nema nazev");
+            info.setText("Ukol nema nazev");
+        }else if(!ANJ.isSelected() && !MAT.isSelected() && !CES.isSelected()) {
+            System.out.println("Ukol nema predmet");
+            info.setText("Ukol nema predmet");
+        }else if(!specha.isSelected() && !mamCas.isSelected() && !bezTerminu.isSelected()){
+            System.out.println("Ukol nema prioritu");
+            info.setText("Ukol nema prioritu");
+        }else{
+            String splneno = "";
+            String predmet = "";
+            String priorita = "";
 
+            if (ANJ.isSelected()) {
+                predmet = ANJ.getText();
+            }else if (MAT.isSelected()) {
+                predmet = MAT.getText();
+            }else if (CES.isSelected()) {
+                predmet = CES.getText();
+            }
+
+            if (specha.isSelected()) {
+                priorita = specha.getText();
+            }else if (mamCas.isSelected()) {
+                priorita = mamCas.getText();
+            }else if (bezTerminu.isSelected()) {
+                priorita = bezTerminu.getText();
+            }
+
+            if (checkUkolu.isSelected()) {
+                splneno = "Ano";
+            }else{
+                splneno = "Ne";
+            }
+
+            lstUkoluItems.add(new Ukol(nazevUkolu.getText(),predmet,priorita,splneno));
+            listUkolu.add(new Ukol(nazevUkolu.getText(),predmet,priorita,splneno));
+            lstUkolu.setItems(lstUkoluItems);
+            nazevUkolu.setText("");
+            ANJ.setSelected(false);
+            MAT.setSelected(false);
+            CES.setSelected(false);
+            specha.setSelected(false);
+            mamCas.setSelected(false);
+            bezTerminu.setSelected(false);
+            checkUkolu.setSelected(false);
+        }
+
+    }
+    @FXML
+    protected void onClick(){
+        try{
+            uprava.setDisable(false);
+            smazani.setDisable(false);
+            Ukol u = lstUkoluItems.get(lstUkolu.getSelectionModel().getSelectedIndex());
+            lstUkolu.setItems(lstUkoluItems);
+            info.setText("Informace:\nÚkol: " + u.getNazevUkolu()+"\n Předmět: "+u.getPredmet()+"\n Priorita: "+u.getPriorita()+"\n Splněno: "+u.getSplneno());
+        }catch(IndexOutOfBoundsException e){
+            System.out.println("Nemate pridany zadny ukol");
+        }
+    }
+    @FXML
+    protected void onUpravitButtonClick(){
+        smazani.setDisable(true);
+        uprava.setDisable(true);
+        odeslani.setDisable(true);
+        dokoncit.setDisable(false);
+        Ukol u = lstUkoluItems.get(lstUkolu.getSelectionModel().getSelectedIndex());
+        nazevUkolu.setText(u.getNazevUkolu());
+        ANJ.setSelected(false);
+        MAT.setSelected(false);
+        CES.setSelected(false);
+        specha.setSelected(false);
+        mamCas.setSelected(false);
+        bezTerminu.setSelected(false);
+        checkUkolu.setSelected(false);
+    }
+    @FXML
+    protected void onDokoncitButtonClick(){
+        Ukol u = lstUkoluItems.get(lstUkolu.getSelectionModel().getSelectedIndex());
+        smazani.setDisable(true);
+        uprava.setDisable(true);
+        dokoncit.setDisable(true);
+        odeslani.setDisable(false);
         if (ANJ.isSelected()) {
-            predmet = ANJ.getText();
+            u.setPredmet(ANJ.getText());
         }else if (MAT.isSelected()) {
-            predmet = MAT.getText();
+            u.setPredmet(MAT.getText());
         }else if (CES.isSelected()) {
-            predmet = CES.getText();
+            u.setPredmet(CES.getText());
         }
 
         if (specha.isSelected()) {
-            priorita = specha.getText();
+            u.setPriorita(specha.getText());
         }else if (mamCas.isSelected()) {
-            priorita = mamCas.getText();
+            u.setPriorita(mamCas.getText());
         }else if (bezTerminu.isSelected()) {
-            priorita = bezTerminu.getText();
+            u.setPriorita(bezTerminu.getText());
         }
 
         if (checkUkolu.isSelected()) {
-            splneno = "Ano";
+            u.setSplneno("Ano");
         }else{
-            splneno = "Ne";
+            u.setSplneno("Ne");
         }
-
-        lstUkoluItems.add(new Ukol(nazevUkolu.getText(),predmet,priorita,splneno));
+        u.setNazevUkolu(nazevUkolu.getText());
         nazevUkolu.setText("");
         ANJ.setSelected(false);
         MAT.setSelected(false);
@@ -66,9 +151,51 @@ public class HelloController {
         checkUkolu.setSelected(false);
     }
     @FXML
-    protected void onClick(){
+    protected void onSmaatButtonClick(){
+        odeslani.setDisable(true);
         Ukol u = lstUkoluItems.get(lstUkolu.getSelectionModel().getSelectedIndex());
+        lstUkoluItems.remove(u);
         lstUkolu.setItems(lstUkoluItems);
-        info.setText("Informace:\nÚkol: " + u.getNazevUkolu()+"\n Předmět: "+u.getPredmet()+"\n Priorita: "+u.getPriorita()+"\n Splněno: "+u.getSplneno());
+    }
+    @FXML
+    protected void onUkoncitClick(){
+        Platform.exit();
+    }
+    @FXML
+    protected void onVseClick(){
+        lstUkoluItems.clear();
+        for (Ukol u : listUkolu) {
+            lstUkoluItems.add(u);
+            lstUkolu.setItems(lstUkoluItems);
+        }
+
+    }
+    @FXML
+    protected void onNedkonceneClick(){
+        lstUkoluItems.clear();
+        for(Ukol u : listUkolu){
+            if (u.getSplneno().equals("Ne")){
+                lstUkoluItems.add(u);
+            }
+        }
+        lstUkolu.setItems(lstUkoluItems);
+    }
+    @FXML
+    protected void onDokonceneClick(){
+        lstUkolu.getItems().clear();
+        for(Ukol u : listUkolu){
+            if (u.getSplneno().equals("Ano")){
+                lstUkoluItems.add(u);
+            }
+        }
+        lstUkolu.setItems(lstUkoluItems);
+    }
+    @FXML
+    protected void onNapovedaClick(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Napoveda");
+        alert.setHeaderText("Napoveda pro spravu uzivatelu");
+        alert.setContentText("Pridej a spravuj uzivatele");
+        alert.showAndWait();
     }
 }

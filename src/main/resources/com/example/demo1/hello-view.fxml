@@ -15,35 +15,40 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="613.0" prefWidth="465.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="com.example.demo1.HelloController">
+<VBox alignment="CENTER" prefHeight="613.0" prefWidth="558.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.HelloController">
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="Soubor">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="ukoncit" mnemonicParsing="false" onAction="#onUkoncitClick" text="Ukončit" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="Zobrazit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="vse" mnemonicParsing="false" onAction="#onVseClick" text="Vše" />
+                  <MenuItem fx:id="nedokoncene" mnemonicParsing="false" onAction="#onNedkonceneClick" text="Nedokončené" />
+                  <MenuItem fx:id="dokoncene" mnemonicParsing="false" onAction="#onDokonceneClick" text="Dokončené" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
+            <Menu mnemonicParsing="false" text="Pomoc">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onNapovedaClick" text="Nápověda" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
-      <Label alignment="TOP_LEFT" prefHeight="55.0" prefWidth="425.0" text="Zpráva úkolů">
+      <Label alignment="TOP_LEFT" prefHeight="62.0" prefWidth="516.0" text="Zpráva úkolů">
          <font>
             <Font size="21.0" />
          </font>
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" top="20.0" />
+         </VBox.margin>
       </Label>
       <HBox prefHeight="530.0" prefWidth="425.0">
          <children>
-            <VBox prefHeight="439.0" prefWidth="218.0">
+            <VBox prefHeight="477.0" prefWidth="279.0">
                <children>
                   <Label text="Zadej nazev Úkolu:">
                      <VBox.margin>
@@ -111,11 +116,30 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </CheckBox>
-                  <Button fx:id="odeslani" mnemonicParsing="false" onAction="#onOdeslatButtonClick" text="Odeslat">
+                  <Button fx:id="odeslani" mnemonicParsing="false" onAction="#onOdeslatButtonClick" text="Přidat úkol">
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </Button>
+                  <HBox prefHeight="0.0" prefWidth="192.0">
+                     <children>
+                        <Button fx:id="uprava" disable="true" mnemonicParsing="false" onAction="#onUpravitButtonClick" text="Upravit">
+                           <HBox.margin>
+                              <Insets right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="dokoncit" disable="true" mnemonicParsing="false" onAction="#onDokoncitButtonClick" text="Načíst">
+                           <HBox.margin>
+                              <Insets right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="smazani" disable="true" mnemonicParsing="false" onAction="#onSmaatButtonClick" text="Smazat">
+                           <HBox.margin>
+                              <Insets right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                   <Label fx:id="info" alignment="TOP_LEFT" prefHeight="158.0" prefWidth="192.0" text="Informace:">
                      <VBox.margin>
                         <Insets top="20.0" />
@@ -123,7 +147,7 @@
                   </Label>
                </children>
             </VBox>
-            <ListView fx:id="lstUkolu" onMouseClicked="#onClick" prefHeight="261.0" prefWidth="259.0" />
+            <ListView fx:id="lstUkolu" onMouseClicked="#onClick" prefHeight="477.0" prefWidth="241.0" />
          </children>
          <VBox.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
