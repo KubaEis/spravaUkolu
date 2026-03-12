@@ -37,87 +37,51 @@ public class HelloController {
         boolean nazev = true;
         boolean predmet = true;
         boolean priorita = true;
+        info.setText("Informace:");
         if (nazevUkolu.getText().equals("")) {
             System.out.println("Ukol nema nazev");
-            info.setText(info.getText()+"Ukol nema nazev\n");
+            info.setText(info.getText()+"\nUkol nema nazev");
             nazev = false;
         }
         if(!ANJ.isSelected() && !MAT.isSelected() && !CES.isSelected()) {
             System.out.println("Ukol nema predmet");
-            info.setText(info.getText()+"Ukol nema predmet\n");
+            info.setText(info.getText()+"\nUkol nema predmet");
             predmet = false;
         }
         if(!specha.isSelected() && !mamCas.isSelected() && !bezTerminu.isSelected()){
             System.out.println("Ukol nema prioritu");
-            info.setText(info.getText()+"Ukol nema prioritu\n");
+            info.setText(info.getText()+"\nUkol nema prioritu");
             priorita = false;
         }
         if (nazev && predmet && priorita) {
-            String splnenoS = "";
-            String predmet = "";
-            String prioritaS = "";
+            String spl = "";
+            String pre = "";
+            String pri = "";
 
             if (ANJ.isSelected()) {
-                predmet = ANJ.getText();
+                pre = ANJ.getText();
             }else if (MAT.isSelected()) {
-                predmet = MAT.getText();
+                pre = MAT.getText();
             }else if (CES.isSelected()) {
-                predmet = CES.getText();
+                pre = CES.getText();
             }
 
             if (specha.isSelected()) {
-                prioritaS = specha.getText();
+                pri = specha.getText();
             }else if (mamCas.isSelected()) {
-                prioritaS = mamCas.getText();
+                pri = mamCas.getText();
             }else if (bezTerminu.isSelected()) {
-                prioritaS = bezTerminu.getText();
+                pri = bezTerminu.getText();
             }
 
             if (checkUkolu.isSelected()) {
-                splneno = "Ano";
+                spl = "Ano";
             }else{
-                splneno = "Ne";
+                spl = "Ne";
             }
 
-            lstUkoluItems.add(new Ukol(nazevUkolu.getText(),predmet, prioritaS,splneno));
-            listUkolu.add(new Ukol(nazevUkolu.getText(),predmet, prioritaS,splneno));
-            lstUkolu.setItems(lstUkoluItems);
-            nazevUkolu.setText("");
-            ANJ.setSelected(false);
-            MAT.setSelected(false);
-            CES.setSelected(false);
-            specha.setSelected(false);
-            mamCas.setSelected(false);
-            bezTerminu.setSelected(false);
-            checkUkolu.setSelected(false);}
-            String splneno = "";
-            String predmet = "";
-            String priorita = "";
-
-            if (ANJ.isSelected()) {
-                predmet = ANJ.getText();
-            }else if (MAT.isSelected()) {
-                predmet = MAT.getText();
-            }else if (CES.isSelected()) {
-                predmet = CES.getText();
-            }
-
-            if (specha.isSelected()) {
-                priorita = specha.getText();
-            }else if (mamCas.isSelected()) {
-                priorita = mamCas.getText();
-            }else if (bezTerminu.isSelected()) {
-                priorita = bezTerminu.getText();
-            }
-
-            if (checkUkolu.isSelected()) {
-                splneno = "Ano";
-            }else{
-                splneno = "Ne";
-            }
-
-            lstUkoluItems.add(new Ukol(nazevUkolu.getText(),predmet,priorita,splneno));
-            listUkolu.add(new Ukol(nazevUkolu.getText(),predmet,priorita,splneno));
+            lstUkoluItems.add(new Ukol(nazevUkolu.getText(), pre, pri,spl));
+            listUkolu.add(new Ukol(nazevUkolu.getText(), pre, pri,spl));
             lstUkolu.setItems(lstUkoluItems);
             nazevUkolu.setText("");
             ANJ.setSelected(false);
@@ -127,8 +91,9 @@ public class HelloController {
             mamCas.setSelected(false);
             bezTerminu.setSelected(false);
             checkUkolu.setSelected(false);
+        }else{
+            System.out.println("UKOL JE NEPLATNY");
         }
-
     }
     @FXML
     protected void onClick(){
@@ -150,13 +115,27 @@ public class HelloController {
         dokoncit.setDisable(false);
         Ukol u = lstUkoluItems.get(lstUkolu.getSelectionModel().getSelectedIndex());
         nazevUkolu.setText(u.getNazevUkolu());
-        ANJ.setSelected(false);
-        MAT.setSelected(false);
-        CES.setSelected(false);
-        specha.setSelected(false);
-        mamCas.setSelected(false);
-        bezTerminu.setSelected(false);
-        checkUkolu.setSelected(false);
+        if (u.getPredmet().equals("Anglictina")) {
+            ANJ.setSelected(true);
+        }else if (u.getPredmet().equals("Matika")) {
+            MAT.setSelected(true);
+        }else if (u.getPredmet().equals("Cestina")) {
+            CES.setSelected(true);
+        }
+
+        if (u.getPriorita().equals("Spěchá")) {
+            specha.setSelected(true);
+        }else if (u.getPriorita().equals("Ještě mám čas")) {
+            mamCas.setSelected(true);
+        }else if (u.getPriorita().equals("Bez termínu")) {
+            bezTerminu.setSelected(true);
+        }
+
+        if(u.getSplneno().equals("Ano")){
+            checkUkolu.setSelected(true);
+        }else{
+            checkUkolu.setSelected(false);
+        }
     }
     @FXML
     protected void onDokoncitButtonClick(){
@@ -195,10 +174,14 @@ public class HelloController {
         mamCas.setSelected(false);
         bezTerminu.setSelected(false);
         checkUkolu.setSelected(false);
+        lstUkolu.setItems(lstUkoluItems);
     }
     @FXML
     protected void onSmaatButtonClick(){
-        odeslani.setDisable(true);
+        odeslani.setDisable(false);
+        uprava.setDisable(true);
+        dokoncit.setDisable(true);
+        smazani.setDisable(true);
         Ukol u = lstUkoluItems.get(lstUkolu.getSelectionModel().getSelectedIndex());
         lstUkoluItems.remove(u);
         lstUkolu.setItems(lstUkoluItems);
